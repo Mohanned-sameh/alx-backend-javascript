@@ -1,11 +1,10 @@
 export default function createReportObject(employeesList) {
-  const report = {
-    employees: employeesList,
-    getEmployees: () => employeesList,
-    getEmployeesCount: () => employeesList.length,
-    getEmployeesWithHigherSalary: (salary) =>
-      employeesList.filter((employee) => employee.salary > salary),
+  return {
+    allEmployees: {
+      ...employeesList,
+    },
+    getNumberOfDepartments(employeesList) {
+      return Object.keys(employeesList).length;
+    },
   };
-
-  return report;
 }
