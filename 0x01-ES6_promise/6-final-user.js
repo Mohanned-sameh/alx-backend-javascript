@@ -1,8 +1,18 @@
-import signUpUser from './5-user-promise.js';
-import uploadPhoto from './utils.js';
+import signUpUser from './4-user-promise';
+import uploadPhoto from './5-photo-reject';
 
-export default function handleProfileSignup() {
-  return Promise.all([signUpUser(), uploadPhoto()])
-    .then((values) => console.log(`${values[0].body} ${values[1].body}`))
-    .catch(() => console.log('Signup system offline'));
+export default async function handleProfileSignup(
+  firstName,
+  lastName,
+  fileName
+) {
+  return Promise.allSettled([
+    signUpUser(firstName, lastName),
+    uploadPhoto(fileName),
+  ]).then((res) =>
+    res.map((o) => ({
+      status: o.status,
+      value: o.status === 'fulfilled' ? o.value : String(o.reason),
+    }))
+  );
 }
