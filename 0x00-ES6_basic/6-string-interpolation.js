@@ -1,10 +1,13 @@
-export default function getSanFranciscoDescription() {
-  const year = 2017;
-  const budget = {
-    income: '$119,868',
-    gdp: '$154.2 billion',
-    capita: '$178,479',
-  };
+import signUpUser from './4-user-promise';
+import uploadPhoto from './5-photo-reject';
 
-  return `As of ${year}, it was the seventh-highest income county in the United States, with a per capita personal income of ${budget.income}. As of 2015, San Francisco proper had a GDP of ${budget.gdp}, and a GDP per capita of ${budget.capita}.`;
+export default async function handleProfileSignup(firstName, lastName, fileName) {
+  return Promise
+    .allSettled([signUpUser(firstName, lastName), uploadPhoto(fileName)])
+    .then((res) => (
+      res.map((o) => ({
+        status: o.status,
+        value: o.status === 'fulfilled' ? o.value : String(o.reason),
+      }))
+    ));
 }
