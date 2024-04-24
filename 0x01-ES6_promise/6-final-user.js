@@ -7,30 +7,13 @@ export default async function handleProfileSignup(
   fileName
 ) {
   const res = [];
-  try {
-    const user = await signUpUser(firstName, lastName);
-    res.push({
-      status: 'fulfilled',
-      value: user,
-    });
-  } catch (error) {
-    res.push({
-      status: 'rejected',
-      value: error.toString(),
-    });
-  }
+  const user = await signUpUser(firstName, lastName).catch(() => null);
+  const photo = await uploadPhoto(fileName).catch(() => null);
 
-  try {
-    const uploader = await uploadPhoto(fileName);
-    res.push({
-      status: 'fulfilled',
-      value: uploader,
-    });
-  } catch (error) {
-    res.push({
-      status: 'rejected',
-      value: error.toString(),
-    });
+  if (user === null || photo === null) {
+    res.push({ status: 'rejected', value: user });
+  } else {
+    res.push({ status: 'fulfilled', value: user });
   }
   return res;
 }
