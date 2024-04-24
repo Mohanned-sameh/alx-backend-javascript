@@ -6,13 +6,31 @@ export default async function handleProfileSignup(
   lastName,
   fileName
 ) {
-  return Promise.allSettled([
-    signUpUser(firstName, lastName),
-    uploadPhoto(fileName),
-  ]).then((res) =>
-    res.map((o) => ({
-      status: o.status,
-      value: o.status === 'fulfilled' ? o.value : String(o.reason),
-    }))
-  );
+  const res = [];
+  try {
+    const user = await signUpUser(firstName, lastName);
+    res.push({
+      status: 'fulfilled',
+      value: user,
+    });
+  } catch (error) {
+    res.push({
+      status: 'rejected',
+      value: error.toString(),
+    });
+  }
+
+  try {
+    const uploader = await uploadPhoto(fileName);
+    res.push({
+      status: 'fulfilled',
+      value: uploader,
+    });
+  } catch (error) {
+    res.push({
+      status: 'rejected',
+      value: error.toString(),
+    });
+  }
+  return res;
 }
