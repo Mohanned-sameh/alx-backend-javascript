@@ -6,5 +6,5 @@ export default function getSanFranciscoDescription() {
     capita: '$178,479',
   };
 
-  return `San Francisco is a city in the US. The population is 884,363. The city was founded in 1776. The city has a budget of ${budget.income} in ${year}. The GDP is ${budget.gdp} and the capita is ${budget.capita}.`;
+  return `As of ${year}, it was the seventh-highest income county in the United States, with a per capita personal income of ${budget.income}. As of 2015, San Francisco proper had a GDP of ${budget.gdp}, and a GDP per capita of ${budget.capita}.`;
 }
