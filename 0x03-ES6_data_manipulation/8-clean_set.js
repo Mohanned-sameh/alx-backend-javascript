@@ -1,3 +1,9 @@
 export default function cleanSet(set, startString) {
-  return new Set([...set].filter((element) => element.startsWith(startString)));
+  const newSet = new Set();
+  set.forEach((value) => {
+    if (typeof value === 'string' && value.startsWith(startString)) {
+      newSet.add(value);
+    }
+  });
+  return newSet;
 }
