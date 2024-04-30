@@ -4,7 +4,7 @@ export default function updateStudentGradeByCity(students, city, newGrades) {
   return studentsByCity.map((std) => {
     const stdGrade = newGrades.find((grade) => grade.studentId === std.id);
     return {
-      ...std, // Spread operator to copy all existing student properties
+      ...std,
       grade: stdGrade ? stdGrade.grade : 'N/A',
     };
   });
