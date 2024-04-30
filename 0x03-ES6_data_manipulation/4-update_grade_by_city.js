@@ -3,13 +3,16 @@ export default function updateStudentGradeByCity(
   city,
   newGrades
 ) {
-  return getListStudents
-    .filter((student) => student.location === city)
-    .map((student) => {
-      const grade = newGrades.filter(
-        (newGrade) => newGrade.studentId === student.id
-      );
-      student.grade = grade.length > 0 ? grade[0].grade : 'N/A';
-      return student;
-    });
+  const studentsInCity = getListStudents().filter(
+    (student) => student.city === city
+  );
+  return studentsInCity.map((student) => {
+    const studentGrade = newGrades.find(
+      (grade) => grade.studentId === student.id
+    );
+    if (studentGrade) {
+      return { ...student, grade: studentGrade.grade };
+    }
+    return student;
+  });
 }
