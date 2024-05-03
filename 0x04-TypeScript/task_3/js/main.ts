@@ -8,8 +8,8 @@ const row: RowElement = {
 };
 
 const newRowID: RowID = CRUD.insertRow(row);
-const updatedRow: RowElement = CRUD.updateRow(newRowID, row);
 row.age = 23;
+const updatedRow: RowElement = CRUD.updateRow(newRowID, row);
 const deletedRow: boolean = CRUD.deleteRow(newRowID);
 
 console.log(newRowID);
