@@ -1,49 +1,40 @@
-const fs = require('fs');
+async function countStudents(path) {
+  const fs = require('fs');
 
-const countStudents = (dataPath) =>
-  new Promise((resolve, reject) => {
-    fs.readFile(dataPath, 'utf-8', (err, data) => {
-      if (err) {
-        reject(new Error('Cannot load the database'));
-      }
-      if (data) {
-        const fileLines = data.toString('utf-8').trim().split('\n');
-        const studentGroups = {};
-        const dbFieldNames = fileLines[0].split(',');
-        const studentPropNames = dbFieldNames.slice(0, dbFieldNames.length - 1);
-
-        for (const line of fileLines.slice(1)) {
-          const studentRecord = line.split(',');
-          const studentPropValues = studentRecord.slice(
-            0,
-            studentRecord.length - 1
-          );
-          const field = studentRecord[studentRecord.length - 1];
-          if (!Object.keys(studentGroups).includes(field)) {
-            studentGroups[field] = [];
-          }
-          const studentEntries = studentPropNames.map((propName, idx) => [
-            propName,
-            studentPropValues[idx],
-          ]);
-          studentGroups[field].push(Object.fromEntries(studentEntries));
+  try {
+    const data = await fs.promises.readFile(path, 'utf-8');
+    const lines = data.split('\n');
+    const fields = {};
+    const students = {};
+    for (const i in lines) {
+      if (i === 0) {
+        const headers = lines[i].split(',');
+        for (const j in headers) {
+          fields[headers[j]] = j;
+          students[headers[j]] = [];
         }
-
-        const totalStudents = Object.values(studentGroups).reduce(
-          (pre, cur) => (pre || []).length + cur.length
+      } else if (lines[i] !== '') {
+        const student = lines[i].split(',');
+        for (const field in fields) {
+          const idx = fields[field];
+          students[field].push(student[idx]);
+        }
+      }
+    }
+    delete students[''];
+    const nStudents = students['firstname'].length;
+    console.log(`Number of students: ${nStudents}`);
+    for (const field in students) {
+      if (field !== 'firstname') {
+        const list = students[field].join(', ');
+        console.log(
+          `Number of students in ${field}: ${students[field].length}. List: ${list}`
         );
-        console.log(`Number of students: ${totalStudents}`);
-        for (const [field, group] of Object.entries(studentGroups)) {
-          const studentNames = group
-            .map((student) => student.firstname)
-            .join(', ');
-          console.log(
-            `Number of students in ${field}: ${group.length}. List: ${studentNames}`
-          );
-        }
-        resolve(true);
       }
-    });
-  });
+    }
+  } catch (err) {
+    throw new Error('Cannot load the database');
+  }
+}
 
 module.exports = countStudents;
