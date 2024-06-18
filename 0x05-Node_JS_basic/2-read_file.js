@@ -1,3 +1,7 @@
+/**
+ * @param {string} dataPath
+ * @returns {undefined}
+ */
 const fs = require('fs');
 
 const countStudents = (dataPath) => {
